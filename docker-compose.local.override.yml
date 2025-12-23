@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+
+  php-fpm:
+    volumes:
+      - ./:/var/www/html
+
+  nginx:
+    volumes:
+      - ./web:/var/www/html/web
+
+  swagger:
+    volumes:
+      - ./swagger/spec.yml:/usr/share/nginx/html/spec.yml

@@ -1,0 +1,41 @@
+namespace: Tests
+support_namespace: Support
+
+modules:
+    enabled:
+        - Db:
+            dsn: 'mysql:host=mariadb;port=3306;dbname=calculator'
+            user: calculator
+            password: secret
+
+suites:
+    api-v1:
+        actor: ApiTester
+        path: api/v1
+        modules:
+            enabled:
+                - REST:
+                      url: http://host.docker.internal:8089/api/v1
+                      depends: PhpBrowser
+        step_decorators:
+            - \Codeception\Step\AsJson
+    api-v2:
+        actor: ApiTester
+        path: api/v2
+        modules:
+            enabled:
+                - REST:
+                    url: http://host.docker.internal:8089/api/v2
+                    depends: PhpBrowser
+        step_decorators:
+            - \Codeception\Step\AsJson
+
+paths:
+    tests: tests
+    output: tests/_output
+    data: tests/Support/Data
+    support: tests/Support
+
+settings:
+    shuffle: false
+    lint: true

@@ -1,0 +1,22 @@
+{
+    "name": "system-analytics/legacy-calculator-api-tests",
+    "description": "Приложение тестирования API Калькулятора расчета стоимости доставки",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Andrey Bogachevskiy",
+            "email": "bogachevskes@yandex.ru"
+        }
+    ],
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^6.3",
+        "codeception/codeception": "^5.0",
+        "codeception/module-rest": "*",
+        "codeception/module-phpbrowser": "*",
+        "codeception/module-db": "^3.1"
+    }
+}

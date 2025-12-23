@@ -1,0 +1,476 @@
+openapi: "3.0.3"
+info:
+  title: API Калькулятор расчета стоимости доставки
+  version: 2.0.0
+  description: |
+    **Калькулятор расчета стоимости доставки** — сервис для расчета стоимости перевозок.  
+    ### Возможности:
+    - Расчет стоимости доставки
+    - Реестр месяцев
+    - Реестр тоннажа
+    - Реестр типов сырья
+    - Реестр цен
+
+    Разработчик [Monoelf](https://github.com/Monoelf)
+servers:
+  - url: http://localhost:8089
+    description: Сервер локального тестирования
+security:
+  - tokenAuth: [ ]
+tags:
+  - name: months
+    description: Регистр месяцев
+  - name: tonnages
+    description: Регистр тоннажей
+  - name: types
+    description: Регистр типов сырья
+  - name: prices
+    description: Регистр цен
+
+paths:
+  ######################################
+  # v1 (deprecated)
+  ######################################
+  /api/v1/months:
+    get:
+      tags: [ months ]
+      summary: Получить список месяцев
+      deprecated: true
+      parameters:
+        - $ref: '#/components/parameters/FieldsParam'
+        - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200': { $ref: '#/components/responses/MonthSuccessfulResponse' }
+        '401': { description: Не авторизован }
+
+    post:
+      tags: [ months ]
+      summary: Добавить месяц
+      deprecated: true
+      requestBody: { $ref: '#/components/requestBodies/MonthData' }
+      responses:
+        '201': { description: Успешное добавление }
+        '400':
+          description: Месяц уже существует
+          content:
+            application/json:
+              example: { message: "Месяц уже существует" }
+        '401': { description: Не авторизован }
+
+  /api/v1/months/{id}:
+    delete:
+      tags: [ months ]
+      summary: Удалить месяц
+      deprecated: true
+      parameters:
+        - $ref: '#/components/parameters/MonthParameter'
+      responses:
+        '204': { description: Успешное удаление }
+        '401': { description: Не авторизован }
+        '404': { description: Не найден }
+
+  /api/v1/tonnages:
+    get:
+      tags: [ tonnages ]
+      summary: Получить список тоннажей
+      deprecated: true
+      parameters:
+        - $ref: '#/components/parameters/FieldsParam'
+        - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200': { $ref: '#/components/responses/TonnagesSuccessfulResponse' }
+        '401': { description: Не авторизован }
+
+    post:
+      tags: [ tonnages ]
+      summary: Добавить тоннаж
+      deprecated: true
+      requestBody: { $ref: '#/components/requestBodies/TonnageRequestBody' }
+      responses:
+        '201': { description: Успешное добавление }
+        '400': { description: Тоннаж уже существует }
+        '401': { description: Не авторизован }
+
+  /api/v1/tonnages/{id}:
+    delete:
+      tags: [ tonnages ]
+      summary: Удалить тоннаж
+      deprecated: true
+      parameters:
+        - $ref: '#/components/parameters/TonnageParameter'
+      responses:
+        '204': { description: Успешное удаление }
+        '404': { description: Не найден }
+        '401': { description: Не авторизован }
+
+  /api/v1/types:
+    get:
+      tags: [ types ]
+      summary: Получить список типов сырья
+      deprecated: true
+      parameters:
+        - $ref: '#/components/parameters/FieldsParam'
+        - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200': { $ref: '#/components/responses/TypesSuccessfulResponse' }
+        '401': { description: Не авторизован }
+
+    post:
+      tags: [ types ]
+      summary: Добавить тип сырья
+      deprecated: true
+      requestBody: { $ref: '#/components/requestBodies/RawTypeRequestBody' }
+      responses:
+        '201': { description: Успешное добавление }
+        '400': { description: Тип сырья уже существует }
+        '401': { description: Не авторизован }
+
+  /api/v1/types/{id}:
+    delete:
+      tags: [ types ]
+      summary: Удалить тип сырья
+      deprecated: true
+      parameters:
+        - $ref: '#/components/parameters/RawTypeParameter'
+      responses:
+        '204': { description: Успешное удаление }
+        '404': { description: Не найден }
+        '401': { description: Не авторизован }
+
+  /api/v1/prices:
+    get:
+      tags: [ prices ]
+      summary: Рассчитать цену
+      deprecated: true
+      parameters:
+        - $ref: '#/components/parameters/PriceQueryParams'
+      responses:
+        '200': { $ref: '#/components/responses/SuccessfulPricesResponse' }
+        '404': { description: Стоимость отсутствует }
+        '401': { description: Не авторизован }
+
+    post:
+      tags: [ prices ]
+      summary: Добавить цену
+      deprecated: true
+      requestBody: { $ref: '#/components/requestBodies/PriceRequestBody' }
+      responses:
+        '201': { description: Успешное добавление }
+        '401': { description: Не авторизован }
+
+  /api/v1/prices/{id}:
+    patch:
+      tags: [ prices ]
+      summary:
+      deprecated: true
+      requestBody: { $ref: '#/components/requestBodies/PriceRequestBody' }
+      responses:
+        '201': { description: Успешное добавление }
+        '401': { description: Не авторизован }
+
+  ######################################
+  # v2 (актуальная версия)
+  ######################################
+  /api/v2/months:
+    get:
+      tags: [ months ]
+      summary: Получить список месяцев
+      parameters:
+        - $ref: '#/components/parameters/FieldsParam'
+        - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200': { $ref: '#/components/responses/MonthSuccessfulResponse' }
+        '401': { description: Не авторизован }
+
+    post:
+      tags: [ months ]
+      summary: Добавить месяц
+      requestBody: { $ref: '#/components/requestBodies/MonthData' }
+      responses:
+        '201': { description: Успешное добавление }
+        '400': { description: Месяц уже существует }
+        '401': { description: Не авторизован }
+
+  /api/v2/months/{id}:
+    delete:
+      tags: [ months ]
+      summary: Удалить месяц
+      parameters:
+        - $ref: '#/components/parameters/MonthParameter'
+      responses:
+        '204': { description: Успешное удаление }
+        '404': { description: Не найден }
+        '401': { description: Не авторизован }
+
+  /api/v2/tonnages:
+    get:
+      tags: [ tonnages ]
+      summary: Получить список тоннажей
+      parameters:
+        - $ref: '#/components/parameters/FieldsParam'
+        - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200': { $ref: '#/components/responses/TonnagesSuccessfulResponse' }
+        '401': { description: Не авторизован (неверный или отсутствует X-API-KEY) }
+    post:
+      tags: [ tonnages ]
+      summary: Добавить тоннаж
+      requestBody: { $ref: '#/components/requestBodies/TonnageRequestBody' }
+      responses:
+        '201': { description: Успешное добавление }
+        '401': { description: Не авторизован (неверный или отсутствует X-API-KEY) }
+    delete:
+      tags:
+        - tonnages
+      summary: Удалить тоннаж по идентификатору
+      description: Удаляет запись тоннажа по ID.
+        При успешном удалении возвращается код 204 без тела.
+      security:
+        - tokenAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор тоннажа
+          schema:
+            type: integer
+            example: 125
+      responses:
+        '204': { description: Успешное удаление }
+        '401': { description: Не авторизован (неверный или отсутствует X-API-KEY) }
+        '404':
+          description: Тоннаж не найден
+          content:
+            application/json:
+              example:
+                message: "Тоннаж не найден"
+                x-debug-tag: "1345a7777f1379303683b5b96edc2a57"
+
+
+  /api/v2/types:
+    get:
+      tags: [ types ]
+      summary: Получить список типов сырья
+      parameters:
+        - $ref: '#/components/parameters/FieldsParam'
+        - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200': { $ref: '#/components/responses/TypesSuccessfulResponse' }
+        '401': { description: Не авторизован (неверный или отсутствует X-API-KEY) }
+
+    post:
+      tags: [ types ]
+      summary: Добавить тип сырья
+      requestBody: { $ref: '#/components/requestBodies/RawTypeRequestBody' }
+      responses:
+        '201': { description: Успешное добавление }
+        '401': { description: Не авторизован (неверный или отсутствует X-API-KEY) }
+
+  /api/v2/types/{id}:
+    delete:
+      tags: [ types ]
+      summary: Удалить тоннаж по идентификатору
+      description: Удаляет запись тоннажа по ID.
+        При успешном удалении возвращается код 204 без тела.
+      security:
+        - tokenAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор тоннажа
+          schema:
+            type: integer
+            example: 125
+      responses:
+        '204': { description: Успешное удаление }
+        '401': { description: Не авторизован (неверный или отсутствует X-API-KEY) }
+        '404':
+          description: Тоннаж не найден
+          content:
+            application/json:
+              example:
+                message: "Тоннаж не найден"
+                x-debug-tag: "1345a7777f1379303683b5b96edc2a57"
+  /api/v2/prices:
+    get:
+      tags: [ prices ]
+      summary: Получить список или рассчитать цену
+      parameters:
+        - $ref: '#/components/parameters/PriceQueryParams'
+        - $ref: '#/components/parameters/FieldsParam'
+        - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200': { $ref: '#/components/responses/SuccessfulPricesResponse' }
+        '401': { description: Не авторизован (неверный или отсутствует X-API-KEY) }
+
+    post:
+      tags: [ prices ]
+      summary: Добавить цену (все поля обязательны)
+      requestBody: { $ref: '#/components/requestBodies/PriceRequestBody' }
+      responses:
+        '201': { description: Успешное добавление }
+        '401': { description: Не авторизован (неверный или отсутствует X-API-KEY) }
+    put:
+      tags: [ prices ]
+      summary: Полностью обновить запись цены (отсутствующие поля обнуляются)
+      requestBody: { $ref: '#/components/requestBodies/PriceRequestBody' }
+      responses:
+        '200': { description: Успешное обновление }
+        '401': { description: Не авторизован (неверный или отсутствует X-API-KEY) }
+    patch:
+      tags: [ prices ]
+      summary: Частично обновить цену (меняются только переданные поля)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                raw_type_id: { type: integer, example: 1 }
+                month_id: { type: integer, example: 2 }
+                tonnage_id: { type: integer, example: 3 }
+                price: { type: integer, example: 250 }
+      responses:
+        '200': { description: Успешное частичное обновление }
+        '401': { description: Не авторизован (неверный или отсутствует X-API-KEY) }
+
+    delete:
+      tags: [ prices ]
+      summary: Удалить цену
+      parameters:
+        - name: id
+          in: query
+          schema: { type: integer }
+          required: true
+      responses:
+        '204': { description: Успешное удаление }
+        '401': { description: Не авторизован (неверный или отсутствует X-API-KEY) }
+
+components:
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+
+  parameters:
+    FieldsParam:
+      name: fields[]
+      in: query
+      required: false
+      schema:
+        type: array
+        items: { type: string }
+      description: "Список возвращаемых полей (пример: ?fields[]=month_id&fields[]=price)"
+    FilterParam:
+      name: filter[]
+      in: query
+      required: false
+      schema:
+        type: array
+        items: { type: string }
+      description: "Список возвращаемых полей (пример: ?filter[month_id][$eq]=2)"
+    MonthParameter:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, example: "декабрь" }
+    TonnageParameter:
+      name: id
+      in: path
+      required: true
+      schema: { type: integer, example: 125 }
+    RawTypeParameter:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, example: "лактоза" }
+    PriceQueryParams:
+      name: filters
+      in: query
+      required: false
+      schema:
+        type: object
+        properties:
+          month_id: { type: integer, example: 1 }
+          tonnage_id: { type: integer, example: 2 }
+          raw_type_id: { type: integer, example: 3 }
+
+  requestBodies:
+    MonthData:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id: { type: integer, example: 1 }
+    TonnageRequestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id: { type: integer, example: 1 }
+    RawTypeRequestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id: { type: integer, example: 1 }
+    PriceRequestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [ raw_type_id, month_id, tonnage_id, price ]
+            properties:
+              raw_type_id: { type: integer, example: 1 }
+              month_id: { type: integer, example: 2 }
+              tonnage_id: { type: integer, example: 3 }
+              price: { type: integer, example: 200 }
+
+  responses:
+    MonthSuccessfulResponse:
+      description: Успешный ответ — список месяцев
+      content:
+        application/json:
+          example:
+            - id: 1
+              month: январь
+            - id: 2
+              month: февраль
+    TonnagesSuccessfulResponse:
+      description: Успешный ответ — список тоннажей
+      content:
+        application/json:
+          example:
+            - id: 1
+              tonnage: 25
+            - id: 2
+              tonnage: 50
+    TypesSuccessfulResponse:
+      description: Успешный ответ — список типов сырья
+      content:
+        application/json:
+          example:
+            - id: 1
+              raw_type: жмых
+            - id: 2
+              raw_type: шрот
+    SuccessfulPricesResponse:
+      description: Успешный ответ — цена и таблица
+      content:
+        application/json:
+          example:
+            id: 1,
+            month_id: 1,
+            tonnage_id: 2,
+            raw_type_id: 3,
+            price: 176,
+
